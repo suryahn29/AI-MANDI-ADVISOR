@@ -9,11 +9,13 @@ import {
   Package,
 } from "lucide-react";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
 
 function FarmerInput() {
   const navigate = useNavigate();
   const { language, t } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const [formData, setFormData] = useState({
     crop: "",
@@ -21,6 +23,30 @@ function FarmerInput() {
     village: "",
     district: "",
   });
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: shouldReduceMotion ? 0 : 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      y: shouldReduceMotion ? 0 : 15,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: shouldReduceMotion ? 0 : 0.45,
+        ease: "easeOut",
+      },
+    },
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -43,8 +69,12 @@ function FarmerInput() {
       <div className="max-w-3xl mx-auto">
 
         {/* Heading */}
-        <div className="text-center mb-10">
-
+        <motion.div
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="text-center mb-10"
+        >
           <div className="bg-green-100 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Sprout size={28} className="text-green-800" />
           </div>
@@ -58,22 +88,39 @@ function FarmerInput() {
               ? "ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ಸ್ಥಳದ ವಿವರಗಳನ್ನು ನೀಡಿ."
               : "Tell us about your produce and location to find better selling opportunities."}
           </p>
-
-        </div>
+        </motion.div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: shouldReduceMotion ? 0 : 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: shouldReduceMotion ? 0 : 0.5,
+            ease: "easeOut",
+          }}
+          className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8"
+        >
 
           {/* Voice Input */}
-          <button
+          <motion.button
             type="button"
+            whileHover={
+              shouldReduceMotion ? {} : { scale: 1.01 }
+            }
+            whileTap={
+              shouldReduceMotion ? {} : { scale: 0.98 }
+            }
             className="w-full bg-green-50 border border-green-200 rounded-2xl p-5 flex items-center justify-center gap-3 text-green-800 hover:bg-green-100 transition mb-8"
           >
-
             <Mic size={24} />
 
             <div className="text-left">
-
               <p className="font-semibold">
                 {t("speakKannada")}
               </p>
@@ -83,16 +130,19 @@ function FarmerInput() {
                   ? "ನಿಮ್ಮ ಬೆಳೆ, ಪ್ರಮಾಣ ಮತ್ತು ಗ್ರಾಮದ ಹೆಸರನ್ನು ಹೇಳಿ"
                   : "Tell us your crop, quantity and village"}
               </p>
-
             </div>
+          </motion.button>
 
-          </button>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <motion.form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
 
             {/* Crop */}
-            <div>
-
+            <motion.div variants={itemVariants}>
               <label className="block font-semibold text-gray-700 mb-2">
                 {t("crop")}
               </label>
@@ -102,9 +152,8 @@ function FarmerInput() {
                 value={formData.crop}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-600 transition"
               >
-
                 <option value="">
                   {language === "kn" ? "ಬೆಳೆ ಆಯ್ಕೆಮಾಡಿ" : "Choose crop"}
                 </option>
@@ -128,20 +177,16 @@ function FarmerInput() {
                 <option value="Rice">
                   {language === "kn" ? "ಅಕ್ಕಿ" : "Rice"}
                 </option>
-
               </select>
-
-            </div>
+            </motion.div>
 
             {/* Quantity */}
-            <div>
-
+            <motion.div variants={itemVariants}>
               <label className="block font-semibold text-gray-700 mb-2">
                 {t("quantity")}
               </label>
 
               <div className="relative">
-
                 <Package
                   size={20}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -160,26 +205,22 @@ function FarmerInput() {
                   min="0.01"
                   step="0.01"
                   required
-                  className="w-full border border-gray-200 rounded-xl pl-12 pr-24 py-3 outline-none focus:ring-2 focus:ring-green-600"
+                  className="w-full border border-gray-200 rounded-xl pl-12 pr-24 py-3 outline-none focus:ring-2 focus:ring-green-600 transition"
                 />
 
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
                   {language === "kn" ? "ಕ್ವಿಂಟಾಲ್" : "Quintals"}
                 </span>
-
               </div>
-
-            </div>
+            </motion.div>
 
             {/* Village */}
-            <div>
-
+            <motion.div variants={itemVariants}>
               <label className="block font-semibold text-gray-700 mb-2">
                 {t("village")}
               </label>
 
               <div className="relative">
-
                 <MapPin
                   size={20}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -196,16 +237,13 @@ function FarmerInput() {
                       : "Enter your village"
                   }
                   required
-                  className="w-full border border-gray-200 rounded-xl pl-12 pr-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
+                  className="w-full border border-gray-200 rounded-xl pl-12 pr-4 py-3 outline-none focus:ring-2 focus:ring-green-600 transition"
                 />
-
               </div>
-
-            </div>
+            </motion.div>
 
             {/* District */}
-            <div>
-
+            <motion.div variants={itemVariants}>
               <label className="block font-semibold text-gray-700 mb-2">
                 {t("district")}
               </label>
@@ -215,9 +253,8 @@ function FarmerInput() {
                 value={formData.district}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-600 transition"
               >
-
                 <option value="">
                   {language === "kn" ? "ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ" : "Select district"}
                 </option>
@@ -228,32 +265,41 @@ function FarmerInput() {
                 <option value="Mandya">Mandya</option>
                 <option value="Mysuru">Mysuru</option>
                 <option value="Tumakuru">Tumakuru</option>
-
               </select>
-
-            </div>
+            </motion.div>
 
             {/* Submit */}
-            <button
+            <motion.button
               type="submit"
+              whileHover={
+                shouldReduceMotion ? {} : { scale: 1.01 }
+              }
+              whileTap={
+                shouldReduceMotion ? {} : { scale: 0.98 }
+              }
               className="w-full bg-green-800 hover:bg-green-900 text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition shadow-md"
             >
               {t("submit")}
               <ArrowRight size={20} />
-            </button>
+            </motion.button>
 
-          </form>
+          </motion.form>
 
-        </div>
+        </motion.div>
 
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <motion.p
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: shouldReduceMotion ? 0 : 0.5 }}
+          className="text-center text-sm text-gray-400 mt-6"
+        >
           {language === "kn"
             ? "ಉತ್ತಮ ಮಾರಾಟದ ಅವಕಾಶಗಳನ್ನು ಹುಡುಕಲು ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಬಳಸಲಾಗುತ್ತದೆ."
             : "Your information is used to find the best selling opportunities."}
-        </p>
+        </motion.p>
 
       </div>
-
     </div>
   );
 }

@@ -8,10 +8,27 @@ import {
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
 
 function Home() {
   const { t } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
+
+  const fadeUp = {
+    hidden: {
+      opacity: 0,
+      y: shouldReduceMotion ? 0 : 20,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: shouldReduceMotion ? 0 : 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
 
   const features = [
     {
@@ -43,7 +60,11 @@ function Home() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
 
           {/* Left Content */}
-          <div>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+          >
 
             <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Sprout size={16} />
@@ -86,14 +107,36 @@ function Home() {
               <ArrowRight size={18} />
             </Link>
 
-          </div>
+          </motion.div>
 
           {/* Right Visual */}
-          <div className="relative">
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: shouldReduceMotion ? 0 : 20,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: shouldReduceMotion ? 0 : 0.7,
+              delay: shouldReduceMotion ? 0 : 0.15,
+              ease: "easeOut",
+            }}
+            className="relative"
+          >
 
             <div className="bg-green-100 rounded-[2rem] p-8 md:p-12">
 
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <motion.div
+                whileHover={
+                  shouldReduceMotion
+                    ? {}
+                    : { y: -4, transition: { duration: 0.2 } }
+                }
+                className="bg-white rounded-2xl p-6 shadow-sm"
+              >
 
                 <div className="flex items-center gap-3 mb-6">
 
@@ -142,11 +185,11 @@ function Home() {
 
                 </div>
 
-              </div>
+              </motion.div>
 
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
 
@@ -155,7 +198,13 @@ function Home() {
       {/* Features Section */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
 
-        <div className="text-center mb-12">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          className="text-center mb-12"
+        >
 
           <h2 className="text-3xl font-bold text-green-950">
             {t("howWeHelp")}
@@ -165,15 +214,36 @@ function Home() {
             Everything you need to make smarter selling decisions.
           </p>
 
-        </div>
+        </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6">
 
           {features.map((feature, index) => (
 
-            <div
+            <motion.div
               key={index}
-              className="bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-lg transition-all"
+              initial={{
+                opacity: 0,
+                y: shouldReduceMotion ? 0 : 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.5,
+                delay: shouldReduceMotion ? 0 : index * 0.12,
+              }}
+              whileHover={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      y: -5,
+                      transition: { duration: 0.2 },
+                    }
+              }
+              className="bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-lg transition-shadow"
             >
 
               <div className="bg-green-100 text-green-800 w-12 h-12 flex items-center justify-center rounded-xl mb-5">
@@ -188,7 +258,7 @@ function Home() {
                 {feature.description}
               </p>
 
-            </div>
+            </motion.div>
 
           ))}
 

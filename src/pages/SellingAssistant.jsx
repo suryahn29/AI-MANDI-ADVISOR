@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import {
   Bot,
   Send,
@@ -8,16 +7,17 @@ import {
   Sprout,
   Sparkles,
   ArrowLeft,
+  Languages,
 } from "lucide-react";
-
 import { Link } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
 
 function SellingAssistant() {
   const { language } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const [message, setMessage] = useState("");
-
   const [messages, setMessages] = useState([]);
 
   // Demo market data
@@ -49,14 +49,10 @@ function SellingAssistant() {
   ];
 
   const calculateProfit = (mandi) =>
-    quantity * mandi.price -
-    mandi.transport -
-    mandi.otherCharges;
+    quantity * mandi.price - mandi.transport - mandi.otherCharges;
 
   const bestMandi = mandis.reduce((best, current) =>
-    calculateProfit(current) > calculateProfit(best)
-      ? current
-      : best
+    calculateProfit(current) > calculateProfit(best) ? current : best
   );
 
   // Translations
@@ -76,6 +72,7 @@ function SellingAssistant() {
         "Compare mandi prices",
         "What is the transportation cost?",
       ],
+      languageInfo: "Ask questions naturally in English or Kannada.",
     },
 
     kn: {
@@ -93,6 +90,7 @@ function SellingAssistant() {
         "ಮಂಡಿಗಳ ಬೆಲೆಗಳನ್ನು ಹೋಲಿಸಿ",
         "ಸಾಗಣೆ ವೆಚ್ಚ ಎಷ್ಟು?",
       ],
+      languageInfo: "ಇಂಗ್ಲಿಷ್ ಅಥವಾ ಕನ್ನಡದಲ್ಲಿ ಸಹಜವಾಗಿ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಬಹುದು.",
     },
   };
 
@@ -111,7 +109,6 @@ function SellingAssistant() {
   // Demo response engine
   const getResponse = (question) => {
     const q = question.toLowerCase();
-
     const isKannada = language === "kn";
 
     if (
@@ -151,14 +148,18 @@ function SellingAssistant() {
       q.includes("ಹೋಲಿಸಿ")
     ) {
       return isKannada
-        ? mandis.map(
-            (m) =>
-              `${m.kannadaName}: ₹${m.price}/ಕ್ವಿಂಟಾಲ್, ನಿವ್ವಳ ಆದಾಯ ₹${calculateProfit(m).toLocaleString("en-IN")}`
-          ).join("\n")
-        : mandis.map(
-            (m) =>
-              `${m.name}: ₹${m.price}/quintal | Net: ₹${calculateProfit(m).toLocaleString("en-IN")}`
-          ).join("\n");
+        ? mandis
+            .map(
+              (m) =>
+                `${m.kannadaName}: ₹${m.price}/ಕ್ವಿಂಟಾಲ್, ನಿವ್ವಳ ಆದಾಯ ₹${calculateProfit(m).toLocaleString("en-IN")}`
+            )
+            .join("\n")
+        : mandis
+            .map(
+              (m) =>
+                `${m.name}: ₹${m.price}/quintal | Net: ₹${calculateProfit(m).toLocaleString("en-IN")}`
+            )
+            .join("\n");
     }
 
     return isKannada
@@ -170,7 +171,6 @@ function SellingAssistant() {
     if (!text.trim()) return;
 
     const userMessage = text.trim();
-
     const assistantResponse = getResponse(userMessage);
 
     setMessages((prev) => [
@@ -188,23 +188,34 @@ function SellingAssistant() {
     setMessage("");
   };
 
+  const instant = shouldReduceMotion ? 0 : 0.45;
+
   return (
     <div className="min-h-screen bg-[#F8FAF5] px-6 py-10">
-
       <div className="max-w-4xl mx-auto">
 
         {/* Back Navigation */}
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-green-800 font-medium mb-6"
+        <motion.div
+          initial={{ opacity: 0, x: -15 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: instant }}
         >
-          <ArrowLeft size={18} />
-          {t.back}
-        </Link>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-green-800 font-medium mb-6"
+          >
+            <ArrowLeft size={18} />
+            {t.back}
+          </Link>
+        </motion.div>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: instant, delay: 0.05 }}
+          className="flex items-center gap-4 mb-8"
+        >
           <div className="bg-green-100 p-4 rounded-2xl">
             <Bot size={32} className="text-green-800" />
           </div>
@@ -218,15 +229,52 @@ function SellingAssistant() {
               {t.subtitle}
             </p>
           </div>
+        </motion.div>
 
-        </div>
+        {/* Bilingual Support Identity */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: instant, delay: 0.12 }}
+          className="bg-green-50 border border-green-100 rounded-2xl p-4 mb-7 flex flex-col sm:flex-row sm:items-center gap-3"
+        >
+          <div className="bg-white p-2.5 rounded-xl w-fit">
+            <Languages size={22} className="text-green-800" />
+          </div>
+
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-sm font-semibold text-green-950">
+                English
+              </span>
+
+              <span className="text-gray-300">|</span>
+
+              <span className="text-sm font-semibold text-green-950">
+                ಕನ್ನಡ
+              </span>
+            </div>
+
+            <p className="text-xs text-gray-600">
+              {t.languageInfo}
+            </p>
+          </div>
+
+          <span className="text-xs font-semibold text-green-800 bg-white border border-green-100 rounded-full px-3 py-1.5 w-fit">
+            Bilingual Support
+          </span>
+        </motion.div>
 
         {/* Chat Container */}
-        <div className="bg-white border border-gray-100 rounded-3xl shadow-sm overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: instant, delay: 0.18 }}
+          className="bg-white border border-gray-100 rounded-3xl shadow-sm overflow-hidden"
+        >
 
           {/* Chat Header */}
           <div className="bg-green-900 text-white p-5 flex items-center gap-3">
-
             <div className="bg-green-800 p-2 rounded-full">
               <Sprout size={22} />
             </div>
@@ -244,23 +292,27 @@ function SellingAssistant() {
             <span className="ml-auto text-xs text-green-200">
               ● Online
             </span>
-
           </div>
 
           {/* Messages */}
           <div className="p-6 min-h-[380px] max-h-[480px] overflow-y-auto space-y-6">
 
             {messages.map((msg, index) => (
-
-              <div
+              <motion.div
                 key={index}
+                initial={
+                  shouldReduceMotion
+                    ? false
+                    : { opacity: 0, y: 12 }
+                }
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
                 className={`flex gap-3 ${
                   msg.role === "user"
                     ? "justify-end"
                     : "justify-start"
                 }`}
               >
-
                 {msg.role === "assistant" && (
                   <div className="bg-green-100 p-2 rounded-full h-fit">
                     <Bot size={20} className="text-green-800" />
@@ -284,9 +336,7 @@ function SellingAssistant() {
                     <User size={20} />
                   </div>
                 )}
-
-              </div>
-
+              </motion.div>
             ))}
 
           </div>
@@ -302,15 +352,25 @@ function SellingAssistant() {
             <div className="flex flex-wrap gap-2">
 
               {t.suggestions.map((suggestion, index) => (
-
-                <button
+                <motion.button
                   key={index}
+                  initial={
+                    shouldReduceMotion
+                      ? false
+                      : { opacity: 0, y: 10 }
+                  }
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: shouldReduceMotion ? 0 : index * 0.06,
+                  }}
+                  whileHover={shouldReduceMotion ? {} : { y: -2 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
                   onClick={() => handleSend(suggestion)}
                   className="border border-green-200 text-green-800 text-sm px-4 py-2 rounded-full hover:bg-green-50 transition"
                 >
                   {suggestion}
-                </button>
-
+                </motion.button>
               ))}
 
             </div>
@@ -328,13 +388,15 @@ function SellingAssistant() {
               className="flex items-center gap-3"
             >
 
-              <button
+              <motion.button
                 type="button"
+                whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
                 className="bg-green-50 text-green-800 p-3 rounded-xl"
                 title="Kannada voice input coming soon"
               >
                 <Mic size={22} />
-              </button>
+              </motion.button>
 
               <input
                 type="text"
@@ -345,28 +407,39 @@ function SellingAssistant() {
                 className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
               />
 
-              <button
+              <motion.button
                 type="submit"
                 disabled={!message.trim()}
+                whileHover={
+                  shouldReduceMotion || !message.trim()
+                    ? {}
+                    : { scale: 1.05 }
+                }
+                whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
                 className="bg-green-800 text-white p-3 rounded-xl disabled:opacity-40"
               >
                 <Send size={21} />
-              </button>
+              </motion.button>
 
             </form>
 
           </div>
 
-        </div>
+        </motion.div>
 
-        <p className="text-xs text-gray-400 text-center mt-5">
+        {/* Demo Disclaimer */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: instant, delay: 0.3 }}
+          className="text-xs text-gray-400 text-center mt-5"
+        >
           {language === "kn"
             ? "ಮಾದರಿ ಮಾರುಕಟ್ಟೆ ಮಾಹಿತಿ ಮಾತ್ರ. ಮಾರಾಟಕ್ಕೂ ಮೊದಲು ಪ್ರಸ್ತುತ ಬೆಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ."
             : "Demo market data only. Verify current mandi prices before selling."}
-        </p>
+        </motion.p>
 
       </div>
-
     </div>
   );
 }

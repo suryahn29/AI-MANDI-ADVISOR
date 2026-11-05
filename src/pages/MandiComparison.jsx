@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 
 import { useLocation, useNavigate } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
 
 function MandiComparison() {
@@ -13,13 +14,33 @@ function MandiComparison() {
   const navigate = useNavigate();
 
   const { language, t } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const farmerData = location.state;
 
+  const fadeUp = {
+    hidden: {
+      opacity: 0,
+      y: shouldReduceMotion ? 0 : 18,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: shouldReduceMotion ? 0 : 0.5,
+        ease: "easeOut",
+      },
+    },
+  };
+
   if (!farmerData) {
     return (
-      <div className="min-h-screen bg-[#F8FAF5] flex flex-col items-center justify-center px-6">
-
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        className="min-h-screen bg-[#F8FAF5] flex flex-col items-center justify-center px-6"
+      >
         <h1 className="text-2xl font-bold text-green-950 mb-3">
           {language === "kn"
             ? "ರೈತರ ವಿವರಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
@@ -38,8 +59,7 @@ function MandiComparison() {
         >
           {t("findBestMandi")}
         </button>
-
-      </div>
+      </motion.div>
     );
   }
 
@@ -115,8 +135,12 @@ function MandiComparison() {
       <div className="max-w-7xl mx-auto">
 
         {/* Heading */}
-        <div className="mb-10">
-
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          className="mb-10"
+        >
           <p className="text-green-700 font-semibold mb-2">
             {t("marketAnalysis")}
           </p>
@@ -132,12 +156,16 @@ function MandiComparison() {
               ? "ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ಮತ್ತು ಸಾಗಣೆ ವೆಚ್ಚವನ್ನು ಹೋಲಿಸಿ."
               : "Compare market prices and transportation expenses to find your best selling opportunity."}
           </p>
-
-        </div>
+        </motion.div>
 
         {/* Farmer Information */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-8 flex flex-wrap gap-8">
-
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: shouldReduceMotion ? 0 : 0.1 }}
+          className="bg-white border border-gray-100 rounded-2xl p-6 mb-8 flex flex-wrap gap-8"
+        >
           <div>
             <p className="text-sm text-gray-500">
               {t("selectedCrop")}
@@ -177,17 +205,37 @@ function MandiComparison() {
               {farmerData.district}
             </h3>
           </div>
-
-        </div>
+        </motion.div>
 
         {/* Mandi Cards */}
         <div className="grid md:grid-cols-3 gap-6">
 
-          {mandis.map((mandi) => (
+          {mandis.map((mandi, index) => (
 
-            <div
+            <motion.div
               key={mandi.name}
-              className={`bg-white rounded-2xl border p-6 shadow-sm ${
+              initial={{
+                opacity: 0,
+                y: shouldReduceMotion ? 0 : 25,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.5,
+                delay: shouldReduceMotion ? 0 : index * 0.15,
+                ease: "easeOut",
+              }}
+              whileHover={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      y: -5,
+                      transition: { duration: 0.2 },
+                    }
+              }
+              className={`bg-white rounded-2xl border p-6 shadow-sm transition-shadow hover:shadow-lg ${
                 mandi.name === bestMandi.name
                   ? "border-green-600 ring-2 ring-green-100"
                   : "border-gray-100"
@@ -266,22 +314,42 @@ function MandiComparison() {
 
               </div>
 
-              <button
+              <motion.button
                 onClick={() => handleViewDetails(mandi)}
+                whileHover={
+                  shouldReduceMotion ? {} : { scale: 1.02 }
+                }
+                whileTap={
+                  shouldReduceMotion ? {} : { scale: 0.97 }
+                }
                 className="w-full mt-6 flex items-center justify-center gap-2 bg-green-800 hover:bg-green-900 text-white py-3 rounded-xl font-semibold transition"
               >
                 {t("viewDetails")}
                 <ArrowRight size={18} />
-              </button>
+              </motion.button>
 
-            </div>
+            </motion.div>
 
           ))}
 
         </div>
 
         {/* Recommendation Summary */}
-        <div className="bg-green-50 border border-green-100 rounded-xl p-5 mt-10 flex gap-3">
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: shouldReduceMotion ? 0 : 15,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: shouldReduceMotion ? 0 : 0.5,
+            delay: shouldReduceMotion ? 0 : 0.5,
+          }}
+          className="bg-green-50 border border-green-100 rounded-xl p-5 mt-10 flex gap-3"
+        >
 
           <TrendingUp
             className="text-green-800 shrink-0"
@@ -304,7 +372,7 @@ function MandiComparison() {
 
           </div>
 
-        </div>
+        </motion.div>
 
         <p className="text-xs text-gray-400 text-center mt-6">
           {language === "kn"
