@@ -1,35 +1,31 @@
 /*
- * Raitha Mitra logo: a sprout growing from a rupee coin (crop + better earnings).
+ * Raitha Mitra logo: a sprout over a farm field with crop rows and the sun.
  * Same artwork as public/favicon.svg.
  */
 function Logo({ size = 44, className = "" }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      role="img"
-      aria-label="Raitha Mitra logo"
-      className={className}
-    >
-      <rect width="64" height="64" rx="16" fill="#14532d" />
-      {/* coin */}
-      <circle cx="32" cy="42" r="13" fill="#f59e0b" />
-      <circle cx="32" cy="42" r="10" fill="none" stroke="#fde68a" strokeWidth="1.5" />
-      {/* rupee sign */}
-      <path
-        d="M27 36.5h10M27 40h10M30 36.5c3.2 0 4.8 1.4 4.8 3.5s-1.6 3.5-4.8 3.5h-2l6.5 6"
-        fill="none"
-        stroke="#14532d"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* sprout stem */}
-      <path d="M32 29V15" stroke="#86efac" strokeWidth="3" strokeLinecap="round" />
-      {/* leaves */}
-      <path d="M32 22c-1-6-6-9-12-9 0 6 5 10 12 9z" fill="#4ade80" />
-      <path d="M32 18c1-5 5-8 11-8 0 6-4 9-11 8z" fill="#22c55e" />
+    <svg width={size} height={size} viewBox="0 0 64 64" role="img" aria-label="Raitha Mitra logo" className={className}>
+      <defs>
+        <clipPath id="rm-logo-clip">
+          <circle cx="32" cy="32" r="30" />
+        </clipPath>
+      </defs>
+      <circle cx="32" cy="32" r="30" fill="#fef3c7" />
+      <g clipPath="url(#rm-logo-clip)">
+        <circle cx="44" cy="22" r="8" fill="#f59e0b" />
+        <path d="M-2 40 C14 33 50 33 66 40 V66 H-2 Z" fill="#15803d" />
+        <path
+          d="M32 38 L4 66 M32 38 L18 66 M32 38 L32 66 M32 38 L46 66 M32 38 L60 66"
+          stroke="#86efac"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
+        <path d="M-2 40 C14 33 50 33 66 40" fill="none" stroke="#14532d" strokeWidth="2" />
+      </g>
+      <path d="M22 35 V24" stroke="#14532d" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M22 28 c-1-5-5-7-9-7 0 5 4 8 9 7z" fill="#16a34a" />
+      <path d="M22 26 c1-4 4-6 8-6 0 4-3 7-8 6z" fill="#22c55e" />
+      <circle cx="32" cy="32" r="30" fill="none" stroke="#14532d" strokeWidth="3" />
     </svg>
   );
 }
