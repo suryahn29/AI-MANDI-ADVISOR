@@ -19,7 +19,6 @@ const CROP_KN = {
 };
 
 const rupees = (value) => `${Math.round(Number(value) || 0).toLocaleString("en-IN")} ರೂಪಾಯಿ`;
-const rupeesEn = (value) => `${Math.round(Number(value) || 0).toLocaleString("en-IN")} rupees`;
 
 function buildKannadaText(farmer, mandi) {
   const crop = CROP_KN[farmer.crop] || farmer.crop;
@@ -30,16 +29,6 @@ function buildKannadaText(farmer, mandi) {
     `ಸಾಗಣೆ ವೆಚ್ಚ ${rupees(mandi.transport)}, ಇತರ ಶುಲ್ಕ ${rupees(mandi.otherCharges)}. ` +
     `ಎಲ್ಲಾ ವೆಚ್ಚ ಕಳೆದು ಅಂದಾಜು ನಿವ್ವಳ ಆದಾಯ ${rupees(mandi.net)}. ` +
     `ಇವು ಮಾದರಿ ಅಂದಾಜುಗಳು. ಮಾರಾಟ ಮಾಡುವ ಮೊದಲು ಮಂಡಿಯಲ್ಲಿ ಬೆಲೆ ಪರಿಶೀಲಿಸಿ.`
-  );
-}
-
-function buildEnglishText(farmer, mandi) {
-  return (
-    `For your ${farmer.quantity} quintals of ${farmer.crop}, the best mandi is ${mandi.name}. ` +
-    `The price is ${rupeesEn(mandi.price)} per quintal. Transport costs ${rupeesEn(mandi.transport)} ` +
-    `and other charges are ${rupeesEn(mandi.otherCharges)}. ` +
-    `Your estimated net earnings are ${rupeesEn(mandi.net)}. ` +
-    `These are sample estimates. Please check the price at the mandi before selling.`
   );
 }
 
@@ -70,60 +59,79 @@ function ListenRecommendation({ farmer, mandi, language }) {
 
   useEffect(() => cleanup, []);
 
-  const speakWithBrowser = () => {
+  const failMessage = (reason) =>
+    (kn
+      ? "ಕನ್ನಡ ಧ್ವನಿ ಲೋಡ್ ಆಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಒತ್ತಿ."
+      : "Kannada audio could not load. Please tap Listen Now again.") + ` (${reason})`;
+
+  // Fallback only to a Kannada voice installed on the device; never switch to English.
+  const speakWithBrowser = (reason) => {
     const synth = typeof window !== "undefined" ? window.speechSynthesis : null;
-    if (!synth) {
-      setNote(kn ? "ಧ್ವನಿ ಸೇವೆ ಈಗ ಲಭ್ಯವಿಲ್ಲ. ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ." : "Audio is not available right now. Please try again later.");
+    const knVoice = synth?.getVoices().find((v) => v.lang?.toLowerCase().startsWith("kn"));
+    if (!synth || !knVoice) {
+      setNote(failMessage(reason));
       setStatus("idle");
       return;
     }
-    const knVoice = synth.getVoices().find((v) => v.lang?.toLowerCase().startsWith("kn"));
-    const utter = new SpeechSynthesisUtterance(knVoice ? buildKannadaText(farmer, mandi) : buildEnglishText(farmer, mandi));
-    if (knVoice) {
-      utter.voice = knVoice;
-      utter.lang = knVoice.lang;
-    } else {
-      utter.lang = "en-IN";
-      setNote(
-        kn
-          ? "ಕನ್ನಡ ಧ್ವನಿ ಈಗ ಲಭ್ಯವಿಲ್ಲ, ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಓದಲಾಗುತ್ತಿದೆ."
-          : "Kannada audio is unavailable right now, reading in English."
-      );
-    }
+    const utter = new SpeechSynthesisUtterance(buildKannadaText(farmer, mandi));
+    utter.voice = knVoice;
+    utter.lang = knVoice.lang;
     utter.onend = () => setStatus("idle");
     utter.onerror = () => setStatus("idle");
     setStatus("playing");
     synth.speak(utter);
   };
 
+  const fetchAudio = async (signal) => {
+    const res = await fetch(`${API_BASE}/api/v1/speak`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: buildKannadaText(farmer, mandi), language: "kn-IN" }),
+      signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.blob();
+  };
+
   const play = async () => {
     cleanup();
     setNote("");
     setStatus("loading");
+    // Create the player inside the click so browsers allow it to play once the audio arrives.
+    const audio = new Audio();
+    audio.preload = "auto";
+    audioRef.current = audio;
     const controller = new AbortController();
     abortRef.current = controller;
-    const timer = setTimeout(() => controller.abort(), 60000); // Render free tier can take ~50 s to wake
+    const timer = setTimeout(() => controller.abort(), 90000); // Render free tier can take ~50 s to wake
 
+    let reason = "network";
     try {
-      const res = await fetch(`${API_BASE}/api/v1/speak`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: buildKannadaText(farmer, mandi), language: "kn-IN" }),
-        signal: controller.signal,
-      });
-      if (!res.ok) throw new Error(`speak failed: ${res.status}`);
-      const blob = await res.blob();
+      let blob;
+      try {
+        blob = await fetchAudio(controller.signal);
+      } catch (first) {
+        if (controller.signal.aborted) throw first;
+        blob = await fetchAudio(controller.signal); // one retry (server waking up / busy)
+      }
+      if (audioRef.current !== audio) return; // stopped meanwhile
       const url = URL.createObjectURL(blob);
       urlRef.current = url;
-      const audio = new Audio(url);
-      audioRef.current = audio;
       audio.onended = () => setStatus("idle");
-      audio.onerror = () => setStatus("idle");
+      audio.onerror = () => {
+        setNote(failMessage("playback"));
+        setStatus("idle");
+      };
+      audio.src = url;
+      reason = "playback";
       await audio.play();
       setStatus("playing");
-    } catch {
+    } catch (err) {
       if (controller.signal.aborted && abortRef.current !== controller) return; // stopped by user
-      speakWithBrowser();
+      if (controller.signal.aborted) reason = "timeout";
+      else if (err?.name === "NotAllowedError") reason = "autoplay blocked";
+      else if (err?.message?.startsWith("HTTP")) reason = err.message;
+      speakWithBrowser(reason);
     } finally {
       clearTimeout(timer);
     }
