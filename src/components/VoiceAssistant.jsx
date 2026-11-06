@@ -16,7 +16,7 @@ import { useLanguage } from "../context/LanguageContext";
  * Browser voice conversation with Chaitra (Sarvam voice agent).
  *
  * No API key is used in the browser: the SDK's apiKey is empty and baseUrl points at the
- * AI Mandi Advisor backend, which adds the Sarvam key server-side (only for this agent)
+ * Raitha Mitra backend, which adds the Sarvam key server-side (only for this agent)
  * and rate-limits sessions. Each session uses Sarvam credits.
  */
 const API_BASE = (
@@ -56,7 +56,7 @@ const TEXT = {
       mic: "Microphone access was blocked. Please allow the microphone in your browser and try again.",
       noMic: "No microphone was found on this device.",
       busy: "Too many conversations right now. Please wait a minute and try again.",
-      forbidden: "Voice conversations are only available on the AI Mandi Advisor website.",
+      forbidden: "Voice conversations are only available on the Raitha Mitra website.",
       server: "The voice service is not available right now. Please try again later.",
       generic: "Could not start the conversation. Please check your internet connection and try again.",
     },
@@ -86,7 +86,7 @@ const TEXT = {
       mic: "ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ. ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
       noMic: "ಈ ಸಾಧನದಲ್ಲಿ ಮೈಕ್ರೋಫೋನ್ ಕಂಡುಬಂದಿಲ್ಲ.",
       busy: "ಈಗ ಹೆಚ್ಚು ಮಾತುಕತೆಗಳು ನಡೆಯುತ್ತಿವೆ. ಒಂದು ನಿಮಿಷ ಬಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-      forbidden: "ಧ್ವನಿ ಮಾತುಕತೆ AI ಮಂಡಿ ಅಡ್ವೈಸರ್ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಮಾತ್ರ ಲಭ್ಯವಿದೆ.",
+      forbidden: "ಧ್ವನಿ ಮಾತುಕತೆ ರೈತ ಮಿತ್ರ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಮಾತ್ರ ಲಭ್ಯವಿದೆ.",
       server: "ಧ್ವನಿ ಸೇವೆ ಈಗ ಲಭ್ಯವಿಲ್ಲ. ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
       generic: "ಮಾತುಕತೆ ಪ್ರಾರಂಭಿಸಲು ಆಗಲಿಲ್ಲ. ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     },

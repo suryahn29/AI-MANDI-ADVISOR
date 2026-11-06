@@ -60,12 +60,12 @@ function SellingAssistant() {
     en: {
       title: "AI Selling Assistant",
       subtitle: "Your intelligent farming market companion",
-      assistant: "Mandi Mitra",
+      assistant: "Raitha Mitra",
       placeholder: "Ask about crops, prices or profits...",
       suggestionsTitle: "Try asking",
       back: "Back to Home",
       welcome:
-        "Hello! I'm Mandi Mitra. Ask me about crop prices, markets and expected profits.",
+        "Hello! I'm Raitha Mitra. Ask me about crop prices, markets and expected profits.",
       suggestions: [
         "Where should I sell my tomatoes?",
         "How much profit can I make?",
@@ -78,12 +78,12 @@ function SellingAssistant() {
     kn: {
       title: "AI ಮಾರಾಟ ಸಹಾಯಕ",
       subtitle: "ನಿಮ್ಮ ಕೃಷಿ ಮಾರುಕಟ್ಟೆ ಸಹಾಯಕ",
-      assistant: "ಮಂಡಿ ಮಿತ್ರ",
+      assistant: "ರೈತ ಮಿತ್ರ",
       placeholder: "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ...",
       suggestionsTitle: "ಇದನ್ನು ಕೇಳಿ",
       back: "ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ",
       welcome:
-        "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ಮಂಡಿ ಮಿತ್ರ. ಬೆಳೆ ಬೆಲೆ, ಮಾರುಕಟ್ಟೆ ಮತ್ತು ಲಾಭದ ಬಗ್ಗೆ ಕೇಳಿ.",
+        "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ರೈತ ಮಿತ್ರ. ಬೆಳೆ ಬೆಲೆ, ಮಾರುಕಟ್ಟೆ ಮತ್ತು ಲಾಭದ ಬಗ್ಗೆ ಕೇಳಿ.",
       suggestions: [
         "ನನ್ನ ಟೊಮೇಟೊವನ್ನು ಎಲ್ಲಿ ಮಾರಾಟ ಮಾಡಲಿ?",
         "ನನ್ನ ಲಾಭ ಎಷ್ಟು?",

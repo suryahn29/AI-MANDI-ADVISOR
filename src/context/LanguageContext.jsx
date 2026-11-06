@@ -10,7 +10,7 @@ const translations = {
     comparePrices: "Compare Prices",
 
     // Home
-    tagline: "Smarter Selling for Farmers",
+    tagline: "ರೈತ ಮಿತ್ರ · Farmer's friend for better prices",
     smartAgriculture: "Smart Agriculture, Better Earnings",
     sellSmarter: "Sell Smarter.",
     earnBetter: "Earn Better.",
@@ -61,7 +61,7 @@ const translations = {
     comparePrices: "ಬೆಲೆ ಹೋಲಿಕೆ",
 
     // Home
-    tagline: "ರೈತರಿಗಾಗಿ ಉತ್ತಮ ಮಾರಾಟ",
+    tagline: "Raitha Mitra · ಉತ್ತಮ ಬೆಲೆಗೆ ರೈತರ ಸ್ನೇಹಿತ",
     smartAgriculture: "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ, ಉತ್ತಮ ಆದಾಯ",
     sellSmarter: "ಬುದ್ಧಿವಂತಿಕೆಯಿಂದ ಮಾರಿ.",
     earnBetter: "ಹೆಚ್ಚು ಸಂಪಾದಿಸಿ.",

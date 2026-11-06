@@ -1,4 +1,5 @@
-import { Sprout, Languages, Sparkles } from "lucide-react";
+import { Languages, Sparkles } from "lucide-react";
+import Logo from "./Logo";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -11,14 +12,12 @@ function Navbar() {
 
         {/* Brand Identity */}
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="bg-green-100 p-2.5 rounded-xl group-hover:bg-green-200 transition">
-            <Sprout size={27} className="text-green-800" />
-          </div>
+          <Logo size={46} className="shrink-0 transition group-hover:scale-105" />
 
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold text-green-950 tracking-tight">
-                Mandi Mitra
+                {language === "kn" ? "ರೈತ ಮಿತ್ರ" : "Raitha Mitra"}
               </h1>
 
               <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide bg-green-50 text-green-800 px-2 py-1 rounded-full border border-green-100">
