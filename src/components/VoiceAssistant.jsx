@@ -27,7 +27,7 @@ const VOICE_AGENT = {
   org_id: "01a1acdc-f1b4-7250-ba0b-57131b4d67eb",
   workspace_id: "01a1acdc-f1bc-7b18-bb31-81a575586086",
   app_id: "AI-Mandi-Ad-873b0bc6-7b7a",
-  version: 1, // the backend pins the published version anyway
+  version: 2, // the backend pins the published version anyway
 };
 
 const TEXT = {
