@@ -4,5 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/AI-MANDI-ADVISOR/',
+  base: process.env.GITHUB_PAGES === 'true'
+    ? '/AI-MANDI-ADVISOR/'
+    : '/',
 })

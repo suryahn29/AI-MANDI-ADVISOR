@@ -11,7 +11,13 @@ import SellingAssistant from "./pages/SellingAssistant";
 function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter basename="/AI-MANDI-ADVISOR">
+      <BrowserRouter
+        basename={
+          import.meta.env.BASE_URL === "/AI-MANDI-ADVISOR/"
+            ? "/AI-MANDI-ADVISOR"
+            : "/"
+        }
+      >
         <Navbar />
 
         <main>
