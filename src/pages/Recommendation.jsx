@@ -17,6 +17,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
+import ListenRecommendation from "../components/ListenRecommendation";
 
 function Recommendation() {
   const location = useLocation();
@@ -679,13 +680,7 @@ function Recommendation() {
               : "Listen to your selling recommendation in Kannada."}
           </p>
 
-          <motion.button
-            whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-            whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
-            className="bg-green-800 hover:bg-green-900 text-white px-7 py-3 rounded-xl font-semibold transition"
-          >
-            {language === "kn" ? "ಕೇಳಲು ಪ್ರಾರಂಭಿಸಿ" : "Listen Now"}
-          </motion.button>
+          <ListenRecommendation farmer={farmer} mandi={mandi} language={language} />
         </motion.div>
 
         {/* Navigation */}
