@@ -7,15 +7,12 @@ import {
   Sprout,
 } from "lucide-react";
 
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
-import VoiceAssistant from "../components/VoiceAssistant";
 
 function Home() {
   const { t } = useLanguage();
-  const [voiceOpen, setVoiceOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   const fadeUp = {
@@ -89,14 +86,13 @@ function Home() {
             </p>
 
             {/* Voice Button */}
-            <button
-              type="button"
-              onClick={() => setVoiceOpen(true)}
+            <Link
+              to="/input"
               className="flex items-center justify-center gap-3 bg-green-800 hover:bg-green-900 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg transition-all w-full sm:w-auto"
             >
               <Mic size={24} />
               {t("speakKannada")}
-            </button>
+            </Link>
 
             <p className="text-sm text-gray-500 mt-3 mb-5">
               Speak in Kannada and find the best selling opportunities.
@@ -270,7 +266,6 @@ function Home() {
 
       </section>
 
-      <VoiceAssistant open={voiceOpen} onClose={() => setVoiceOpen(false)} />
     </div>
   );
 }
