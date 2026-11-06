@@ -11,11 +11,13 @@ import {
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
+import VoiceAssistant from "../components/VoiceAssistant";
 
 function FarmerInput() {
   const navigate = useNavigate();
   const { language, t } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
+  const [voiceOpen, setVoiceOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     crop: "",
@@ -110,6 +112,7 @@ function FarmerInput() {
           {/* Voice Input */}
           <motion.button
             type="button"
+            onClick={() => setVoiceOpen(true)}
             whileHover={
               shouldReduceMotion ? {} : { scale: 1.01 }
             }
@@ -300,6 +303,8 @@ function FarmerInput() {
         </motion.p>
 
       </div>
+
+      <VoiceAssistant open={voiceOpen} onClose={() => setVoiceOpen(false)} />
     </div>
   );
 }
