@@ -151,7 +151,9 @@ function VoiceAssistant({ open, onClose }) {
           interaction_type: InteractionType.CALL,
           input_sample_rate: 16000,
           output_sample_rate: 16000,
-          initial_language_name: language === "kn" ? "Kannada" : "English",
+          // Always start in Kannada (this is the "Speak in Kannada" button). Chaitra detects
+          // the spoken language and switches to English if the farmer speaks English.
+          initial_language_name: "Kannada",
         },
         audioInterface: new BrowserAudioInterface(16000),
         stateCallback: (s) => setState(s),
